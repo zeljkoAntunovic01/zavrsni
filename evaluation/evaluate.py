@@ -5,8 +5,6 @@ import torch
 from tqdm import tqdm
 from time import perf_counter
 
-import lib.cylib as cylib
-
 __all__ = ['compute_errors', 'get_pred', 'evaluate_semseg']
 
 
@@ -57,7 +55,7 @@ def get_pred(logits, labels, conf_mat):
     pred = pred.byte().cpu()
     pred = pred.numpy().astype(np.int32)
     true = labels.numpy().astype(np.int32)
-    cylib.collect_confusion_matrix(pred.reshape(-1), true.reshape(-1), conf_mat)
+    calculate_conf_matrix(pred.reshape(-1), true.reshape(-1), conf_mat)
 
 
 def mt(sync=False):
@@ -79,8 +77,28 @@ def evaluate_semseg(model, data_loader, class_info, observers=()):
             pred = torch.argmax(logits.data, dim=1).byte().cpu().numpy().astype(np.uint32)
             for o in observers:
                 o(pred, batch, additional)
-            cylib.collect_confusion_matrix(pred.flatten(), batch['original_labels'].flatten(), conf_mat)
+            calculate_conf_matrix(pred.flatten(), batch["original_labels"].flatten(), conf_mat, model.num_classes)
         print('')
         pixel_acc, iou_acc, recall, precision, _, per_class_iou = compute_errors(conf_mat, class_info, verbose=True)
     model.train()
     return iou_acc, per_class_iou
+
+
+def calculate_conf_matrix(predicted, target, conf_mat, num_classes=12):
+    idx = target != 255
+    target = target[idx]
+    predicted = predicted[idx]
+    x = predicted + num_classes * target
+    if num_classes == 19:
+        bincount_2d = np.bincount(
+            x.astype(np.int32), minlength=num_classes ** 2
+        )[:361]
+    else:
+        bincount_2d = np.bincount(
+            x.astype(np.int32), minlength=num_classes ** 2
+        )
+    if bincount_2d.size != num_classes ** 2:
+        print(bincount_2d.size, num_classes ** 2)
+        import pdb; pdb.set_trace()
+    conf = bincount_2d.reshape((num_classes, num_classes))
+    conf_mat += conf.astype(np.uint64)
