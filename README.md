@@ -32,7 +32,7 @@ From https://www.cityscapes-dataset.com/downloads/ download:
 Either download and extract to `datasets/` or create a symbolic link `datasets/Cityscapes`
 Expected dataset structure for Cityscapes is:
 ```
-labels/
+gtFine/
     train/
         aachen/
             aachen_000000_000019.png
@@ -40,7 +40,7 @@ labels/
         ...
     val/
         ...
-rgb/
+leftImg8bit/
     train/
         aachen/
             aachen_000000_000019.png
