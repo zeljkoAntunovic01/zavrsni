@@ -23,15 +23,17 @@ class ExtractInstances:
 
 
 class RemapLabels:
-    def __init__(self, mapping: dict, ignore_id=255, total=35):
+    def __init__(self, mapping: dict, ignore_id=255, total=35, ignore_class=19):
         self.mapping = np.ones((max(total, max(mapping.keys())) + 1,), dtype=np.uint8) * ignore_id
         self.ignore_id = ignore_id
+        self.ignore_class = ignore_class
         for i in range(len(self.mapping)):
             self.mapping[i] = mapping[i] if i in mapping else ignore_id
 
     def _trans(self, labels):
         labels = self.mapping[labels].astype(labels.dtype)
-        labels[labels == 255] = 19
+        if self.ignore_id != self.ignore_class:
+            labels[labels == self.ignore_id] = self.ignore_class
         return labels
 
     def __call__(self, example):
