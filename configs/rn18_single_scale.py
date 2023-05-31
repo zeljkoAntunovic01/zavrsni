@@ -15,7 +15,7 @@ from evaluation import StorePreds
 
 from models.util import get_n_params
 
-root = Path.home() / Path('datasets/Cityscapes')
+root = Path('/mnt/sda1/data/cityscapes')
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
 
@@ -31,6 +31,7 @@ num_classes = Cityscapes.num_classes
 ignore_id = Cityscapes.num_classes
 class_info = Cityscapes.class_info
 color_info = Cityscapes.color_info
+mapping = Cityscapes.id_to_map
 
 target_size_crops = (random_crop_size, random_crop_size)
 target_size_crops_feats = (random_crop_size // 4, random_crop_size // 4)
@@ -42,6 +43,7 @@ eval_each = 4
 
 trans_val = Compose(
     [Open(),
+     RemapLabels(mapping, ignore_id=255),
      SetTargetSize(target_size=target_size, target_size_feats=target_size_feats),
      Tensor(),
      ]
@@ -52,6 +54,7 @@ if evaluating:
 else:
     trans_train = Compose(
         [Open(),
+         RemapLabels(mapping, ignore_id=255),
          RandomFlip(),
          RandomSquareCropAndScale(random_crop_size, ignore_id=num_classes, mean=mean_rgb),
          SetTargetSize(target_size=target_size_crops, target_size_feats=target_size_crops_feats),

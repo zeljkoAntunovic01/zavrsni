@@ -37,17 +37,17 @@ class Cityscapes(Dataset):
     mean = [0.485, 0.456, 0.406]
     std = [0.229, 0.224, 0.225]
 
-    def __init__(self, root: Path, transforms: lambda x: x, subset='train', open_depth=False, labels_dir='labels', epoch=None):
+    def __init__(self, root: Path, transforms: lambda x: x, subset='train', open_depth=False, labels_dir='gtFine', epoch=None):
         self.root = root
-        self.images_dir = self.root / 'rgb' / subset
+        self.images_dir = self.root / 'leftImg8bit' / subset
         self.labels_dir = self.root / labels_dir / subset
         self.depth_dir = self.root / 'depth' / subset
         self.subset = subset
         self.has_labels = subset != 'test'
         self.open_depth = open_depth
-        self.images = list(sorted(self.images_dir.glob('*/*.ppm')))
+        self.images = list(sorted(self.images_dir.glob('*/*.png')))
         if self.has_labels:
-            self.labels = list(sorted(self.labels_dir.glob('*/*.png')))
+            self.labels = list(sorted(self.labels_dir.glob('*/*labelIds.png')))
         self.transforms = transforms
         self.epoch = epoch
 
