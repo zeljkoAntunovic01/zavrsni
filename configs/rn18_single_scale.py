@@ -16,7 +16,7 @@ from data.gta import GTA
 
 from models.util import get_n_params
 
-root = Path('/mnt/sdc1/datasets')       # TODO: Change Path or create symbolic link in datasets
+root = Path('/kaggle/input/gtasorted/gta')       # TODO: Change Path or create symbolic link in datasets
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
 
