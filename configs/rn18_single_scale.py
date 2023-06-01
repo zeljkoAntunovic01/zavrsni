@@ -12,6 +12,7 @@ from models.loss import SemsegCrossEntropy
 from data.transform import *
 from data.cityscapes import Cityscapes
 from evaluation import StorePreds
+from data.gta import GTA
 
 from models.util import get_n_params
 
@@ -62,8 +63,10 @@ else:
          ]
     )
 
-dataset_train = Cityscapes(root, transforms=trans_train, subset='train')
-dataset_val = Cityscapes(root, transforms=trans_val, subset='val')
+#dataset_train = Cityscapes(root, transforms=trans_train, subset='train')
+#dataset_val = Cityscapes(root, transforms=trans_val, subset='val')
+dataset_train = GTA(root, transforms=trans_train, subset='train')
+dataset_val = GTA(root, transforms=trans_val, subset='val')
 
 resnet = resnet18(pretrained=True, efficient=False, mean=mean, std=std, scale=scale)
 model = SemsegModel(resnet, num_classes)
@@ -75,7 +78,7 @@ else:
     lr_min = 1e-6
     fine_tune_factor = 4
     weight_decay = 1e-4
-    epochs = 250
+    epochs = 75 #used to be 250
 
     optim_params = [
         {'params': model.random_init_params(), 'lr': lr, 'weight_decay': weight_decay},
