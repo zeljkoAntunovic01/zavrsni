@@ -1,5 +1,6 @@
 from torch.utils.data import Dataset
 from pathlib import Path
+import os
 
 from ..cityscapes.labels import labels
 
@@ -40,7 +41,7 @@ class GTA(Dataset):
     def __init__(self, root: Path, transforms: lambda x: x, subset='train', open_depth=False, labels_dir='labels', epoch=None):
         self.root = root
         self.images_dir = self.root / subset / 'images'
-        print(self.images_dir)
+        print(os.listdir(self.images_dir))
         self.labels_dir = self.root / subset / labels_dir
         #self.depth_dir = self.root / 'depth' / subset
         self.subset = subset
