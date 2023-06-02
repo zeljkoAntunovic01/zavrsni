@@ -40,7 +40,7 @@ target_size_crops_feats = (random_crop_size // 4, random_crop_size // 4)
 target_size = (2048, 1024)
 target_size_feats = (2048 // 4, 1024 // 4)
 
-eval_each = 4
+eval_each = 1
 
 
 trans_val = Compose(
@@ -79,7 +79,7 @@ else:
     lr_min = 1e-6
     fine_tune_factor = 4
     weight_decay = 1e-4
-    epochs = 75 #used to be 250
+    epochs = 3 #used to be 250
 
     optim_params = [
         {'params': model.random_init_params(), 'lr': lr, 'weight_decay': weight_decay},
