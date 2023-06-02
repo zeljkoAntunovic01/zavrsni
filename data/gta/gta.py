@@ -41,15 +41,14 @@ class GTA(Dataset):
     def __init__(self, root: Path, transforms: lambda x: x, subset='train', open_depth=False, labels_dir='labels', epoch=None):
         self.root = root
         self.images_dir = self.root / subset / 'images'
-        print(os.listdir(self.images_dir))
         self.labels_dir = self.root / subset / labels_dir
         #self.depth_dir = self.root / 'depth' / subset
         self.subset = subset
         self.has_labels = subset != 'test'
         self.open_depth = open_depth
-        self.images = list(sorted(self.images_dir.glob('*/*.png')))
+        self.images = list(sorted(self.images_dir.glob('*.png')))
         if self.has_labels:
-            self.labels = list(sorted(self.labels_dir.glob('*/*.png')))
+            self.labels = list(sorted(self.labels_dir.glob('*.png')))
         self.transforms = transforms
         self.epoch = epoch
 
