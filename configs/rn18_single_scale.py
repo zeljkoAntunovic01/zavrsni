@@ -66,10 +66,10 @@ else:
          ]
     )
 
-#dataset_train = Cityscapes(root, transforms=trans_train, subset='train')
-#dataset_val = Cityscapes(root, transforms=trans_val, subset='val')
-dataset_train = GTA(root, transforms=trans_train, subset='train')
-dataset_val = GTA(root, transforms=trans_val, subset='val')
+dataset_train = Cityscapes(root, transforms=trans_train, subset='train')
+dataset_val = Cityscapes(root, transforms=trans_val, subset='val')
+#dataset_train = GTA(root, transforms=trans_train, subset='train')
+#dataset_val = GTA(root, transforms=trans_val, subset='val')
 
 resnet = resnet18(pretrained=True, efficient=False, mean=mean, std=std, scale=scale)
 model = SemsegModel(resnet, num_classes)
