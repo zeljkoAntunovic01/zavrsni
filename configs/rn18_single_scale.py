@@ -15,12 +15,12 @@ from evaluation import StorePreds
 from data.gta import GTA
 
 from models.util import get_n_params
-evaluating = False
+evaluating = True
 root = Path('../../../../kaggle/input/gtasorted/gta')       # TODO: Change Path or create symbolic link in datasets
 
-if evaluating:
-    root = Path('../../../../kaggle/input/cityscapesdata/cityscapes')
-root = Path('../../../../kaggle/input/cityscapesdata/cityscapes')
+#if evaluating:
+    #root = Path('../../../../kaggle/input/cityscapesdata/cityscapes')
+#root = Path('../../../../kaggle/input/cityscapesdata/cityscapes')
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
 
@@ -67,24 +67,23 @@ else:
          ]
     )
 
-dataset_train = Cityscapes(root, transforms=trans_train, subset='train')
-dataset_val = Cityscapes(root, transforms=trans_val, subset='val')
-#dataset_train = GTA(root, transforms=trans_train, subset='train')
-#dataset_val = GTA(root, transforms=trans_val, subset='val')
+#dataset_train = Cityscapes(root, transforms=trans_train, subset='train')
+#dataset_val = Cityscapes(root, transforms=trans_val, subset='val')
+dataset_train = GTA(root, transforms=trans_train, subset='train')
+dataset_val = GTA(root, transforms=trans_val, subset='val')
 
 resnet = resnet18(pretrained=True, efficient=False, mean=mean, std=std, scale=scale)
 model = SemsegModel(resnet, num_classes)
 if evaluating:
     model.load_state_dict(torch.load('../../../../kaggle/input/swiftnet-model/66-36_rn18_single_scale/stored/model_best.pt'))
 else:
-    model.load_state_dict(
-        torch.load('../../../../kaggle/input/swiftnet-model/66-36_rn18_single_scale/stored/model_best.pt')) #fine tuning
+
     model.criterion = SemsegCrossEntropy(num_classes=num_classes, ignore_id=ignore_id)
     lr = 4e-4
     lr_min = 1e-6
     fine_tune_factor = 4
     weight_decay = 1e-4
-    epochs = 20 #used to be 250
+    epochs = 60 #used to be 250
 
     optim_params = [
         {'params': model.random_init_params(), 'lr': lr, 'weight_decay': weight_decay},
@@ -117,6 +116,7 @@ print(f'SPP params: {spp_params:,}')
 if evaluating:
     eval_loaders = [(loader_val, 'val'), (loader_train, 'train')]
     store_dir = f'{dir_path}/out/'
+    #store_dir = '../../../../kaggle/working/out'
     for d in ['', 'val', 'train', 'training']:
         os.makedirs(store_dir + d, exist_ok=True)
     to_color = ColorizeLabels(color_info)
