@@ -75,7 +75,7 @@ dataset_val = Cityscapes(root, transforms=trans_val, subset='val')
 resnet = resnet18(pretrained=True, efficient=False, mean=mean, std=std, scale=scale)
 model = SemsegModel(resnet, num_classes)
 if evaluating:
-    model.load_state_dict(torch.load('../../../../kaggle/input/swiftnet-model/69-35_rn18_single_scale/stored/model_best.pt'))
+    model.load_state_dict(torch.load('../../../../kaggle/input/swiftnet-finetuned/69-35_rn18_single_scale/stored/model_best.pt'))
 else:
     #model.load_state_dict(
     #    torch.load('../../../../kaggle/input/swiftnet-model/66-36_rn18_single_scale/stored/model_best.pt'))#fine tuning
