@@ -15,12 +15,12 @@ from evaluation import StorePreds
 from data.gta import GTA
 
 from models.util import get_n_params
-evaluating = True
+evaluating = False
 #root = Path('../../../../kaggle/input/gtasorted/gta')       # TODO: Change Path or create symbolic link in datasets
 
 if evaluating:
     root = Path('../../../../kaggle/input/cityscapesdata/cityscapes')
-#root = Path('../../../../kaggle/input/cityscapesdata/cityscapes')
+root = Path('../../../../kaggle/input/cityscapesdata/cityscapes')
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
 
@@ -84,7 +84,7 @@ else:
     lr_min = 1e-6
     fine_tune_factor = 4
     weight_decay = 1e-4
-    epochs = 20 #used to be 250
+    epochs = 60 #used to be 250
 
     optim_params = [
         {'params': model.random_init_params(), 'lr': lr, 'weight_decay': weight_decay},
