@@ -84,7 +84,7 @@ else:
     lr_min = 1e-6
     fine_tune_factor = 4
     weight_decay = 1e-4
-    epochs = 60 #used to be 250
+    epochs = 20 #used to be 250
 
     optim_params = [
         {'params': model.random_init_params(), 'lr': lr, 'weight_decay': weight_decay},
